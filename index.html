@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hive and Spark for Beginners: Easy Quiz</title>
+<style>
+:root{--bg:#eef1fb;--card:#fff;--ink:#16193a;--mute:#5d6285;--line:#d8dcf0;--accent:#4f46e5;--aink:#fff;--soft:#eceafd;--ok:#127a47;--okbg:#e2f6ea;--bad:#b42318;--badbg:#fde9e7;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1020;--card:#171b33;--ink:#eceefb;--mute:#a1a7cc;--line:#2b3157;--accent:#8c9cff;--aink:#0d1020;--soft:#222850;--ok:#6fdb98;--okbg:#10301f;--bad:#ff9087;--badbg:#3a1b19;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1020;--card:#171b33;--ink:#eceefb;--mute:#a1a7cc;--line:#2b3157;--accent:#8c9cff;--aink:#0d1020;--soft:#222850;--ok:#6fdb98;--okbg:#10301f;--bad:#ff9087;--badbg:#3a1b19;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:660px;margin:0 auto;padding:22px 16px 56px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.brand{font-weight:750;font-size:1.05rem}
+.ghost{font:inherit;font-size:.9rem;color:var(--mute);background:transparent;border:1px solid var(--line);border-radius:99px;padding:6px 12px;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 6px 24px rgba(40,40,120,.07)}
+h1{font-size:1.9rem;line-height:1.15;margin:0 0 10px}
+p{margin:0 0 14px}
+.mute{color:var(--mute)}
+.modes{display:grid;gap:12px;margin-top:18px}
+.mode{font:inherit;color:inherit;text-align:left;background:var(--soft);border:2px solid transparent;border-radius:14px;padding:16px;cursor:pointer}
+.mode:hover{border-color:var(--accent)}
+.mode b{display:block;font-size:1.1rem}
+.mode span{color:var(--mute);font-size:.95rem}
+.dots{display:flex;gap:4px;margin-bottom:10px}
+.dots i{flex:1;height:6px;border-radius:99px;background:var(--line)}
+.dots i.ok{background:var(--ok)}.dots i.bad{background:var(--bad)}.dots i.now{background:var(--accent)}
+.meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:.92rem;color:var(--mute)}
+.tag{background:var(--soft);color:var(--accent);font-weight:600;border-radius:99px;padding:3px 12px}
+.q{font-size:1.3rem;line-height:1.35;font-weight:700;margin:0 0 16px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;font:inherit;color:inherit;text-align:left;background:transparent;border:2px solid var(--line);border-radius:12px;padding:13px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--accent);background:var(--soft)}
+.opt kbd{flex:none;width:26px;height:26px;border-radius:8px;background:var(--soft);color:var(--accent);font:600 .85rem system-ui;display:grid;place-items:center}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.fb{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--soft);animation:pop .2s ease-out}
+.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+.fb b{display:block;margin-bottom:2px}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.btn{font:inherit;font-weight:650;background:var(--accent);color:var(--aink);border:0;border-radius:12px;padding:13px 22px;margin-top:16px;cursor:pointer}
+.btn.alt{background:var(--soft);color:var(--accent);margin-left:8px}
+.opt:focus-visible,.btn:focus-visible,.mode:focus-visible,.ghost:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hide{display:none}
+.ring{display:block;margin:6px auto 12px}
+.ring text{fill:var(--ink);font:750 30px system-ui}
+.row{margin:10px 0}
+.row div:first-child{display:flex;justify-content:space-between;font-size:.95rem}
+.track{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.track i{display:block;height:100%;background:var(--accent)}
+.miss{border-top:1px solid var(--line);padding:12px 0}
+.miss small{color:var(--ok);display:block}
+@media (prefers-reduced-motion:reduce){.fb{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><span class="brand">Hive and Spark for Beginners</span><button class="ghost" id="theme" type="button">Dark / light</button></div>
+
+  <section class="card" id="start">
+    <h1>Test what you learned</h1>
+    <p class="mute">Easy questions about Hive and Spark with simple analogies. No prior knowledge needed. After each answer you see a short explanation.</p>
+    <div class="modes">
+      <button class="mode" type="button" data-n="10"><b>Quick round</b><span>10 random questions, about 3 minutes</span></button>
+      <button class="mode" type="button" data-n="24"><b>Full round</b><span>All 24 questions on Hive and Spark</span></button>
+    </div>
+    <p class="mute" style="margin:16px 0 0;font-size:.9rem">Tip: press 1, 2, 3 or 4 to answer and Enter to continue.</p>
+  </section>
+
+  <section class="card hide" id="quiz">
+    <div class="dots" id="dots"></div>
+    <div class="meta"><span id="count"></span><span class="tag" id="tag"></span></div>
+    <p class="q" id="q"></p>
+    <div class="opts" id="opts"></div>
+    <div class="fb hide" id="fb" aria-live="polite"></div>
+    <button class="btn hide" id="next" type="button"></button>
+  </section>
+
+  <section class="card hide" id="end">
+    <svg class="ring" width="150" height="150" viewBox="0 0 150 150" role="img" aria-label="Score">
+      <circle cx="75" cy="75" r="62" fill="none" stroke="var(--line)" stroke-width="12"/>
+      <circle id="arc" cx="75" cy="75" r="62" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 390" transform="rotate(-90 75 75)"/>
+      <text id="pct" x="75" y="86" text-anchor="middle"></text>
+    </svg>
+    <h1 id="msg" style="text-align:center;font-size:1.4rem"></h1>
+    <p class="mute" id="sum" style="text-align:center"></p>
+    <div id="topics"></div>
+    <div id="review"></div>
+    <button class="btn" id="again" type="button">New round</button>
+    <button class="btn alt hide" id="retry" type="button">Retry missed</button>
+  </section>
+</main>
+<script>
+var D=[
+["Hive basics","What is Apache Hive?","A tool that lets you use SQL on big data","A web browser","A video editor","A type of computer","Hive lets people who know SQL work with huge data."],
+["Hive basics","What is the language of Hive called?","HiveQL, which looks very much like SQL","Java","HTML","Photoshop","HiveQL is almost the same as the SQL you may already know."],
+["Hive basics","Where does Hive keep the real data?","In files on HDFS (the big storage)","Inside Hive itself","On your phone","In an email","Hive does not store data. It works on files stored in HDFS."],
+["Hive basics","What is the Hive Metastore?","A catalogue that lists tables, columns and file locations","A fast calculator","A backup disk","A photo album","Like a library catalogue: it describes the data but does not hold it."],
+["Hive basics","What does Hive do with your SQL query?","It translates it into jobs the cluster can run (MapReduce)","It deletes it","It prints it","It sends it by email","Hive is a translator between SQL and the cluster."],
+["Hive basics","Why is Hive often slow?","The engine under it (MapReduce) saves results to disk","It has no tables","It uses too much RAM","It only works at night","Easy to use, but writing to disk after each step takes time."],
+["Hive tables","Which command creates a new table?","CREATE TABLE","MAKE FILE","NEW SHEET","BUILD DATA","CREATE TABLE is how you define a table in Hive and Spark SQL."],
+["Hive tables","Which SQL part counts rows for each group, for example errors per hour?","GROUP BY","ORDER FIRST","JOIN ALL","DELETE BY","GROUP BY puts rows into groups so you can count them."],
+["Hive tables","You drop a MANAGED table. What happens to its data files?","They are deleted too","They stay forever","They are copied","Nothing happens","A managed table owns its files, so dropping it removes them."],
+["Hive tables","You drop an EXTERNAL table. What happens to its data files?","They stay where they are","They are deleted","They turn into photos","They are sent to Hive","Like a book on loan: removing the catalogue card does not destroy the book."],
+["Spark basics","What is Apache Spark?","A fast engine for processing big data","A text editor","A database brand","A spreadsheet","Spark is built to process huge data quickly on many computers."],
+["Spark basics","Why is Spark fast?","It works mostly in memory (RAM) instead of disk","It skips the calculation","It uses less data","It only reads half the file","RAM is much faster than disk, so Spark avoids slow trips to the disk."],
+["Spark basics","Which languages can you use with Spark?","Python, Scala, SQL and more","Only French","Only Excel formulas","None","Spark supports several languages. SQL makes it easy for beginners."],
+["Spark basics","What is PySpark?","The Python way to use Spark","A Spark game","A slow version of Spark","A type of disk","PySpark lets you write Spark code in Python."],
+["Spark basics","A Spark DataFrame is like…","A table with rows and columns, spread over many computers","A single number","A picture","A video","It feels like a normal table, but the work is shared across a cluster."],
+["Spark basics","What does Spark SQL let you do?","Write SQL queries and run them with Spark","Draw charts only","Send emails","Print files","You keep using SQL and Spark does the heavy work."],
+["Spark in action","When does Spark actually start working on your data?","When you ask for a result, like show() or count()","As soon as you open the notebook","Never","Only at midnight","Spark waits and plans first. It runs when a result is needed."],
+["Spark in action","What does Spark’s Catalyst optimizer do?","It finds a faster way to run your query","It stores your data","It deletes old tables","It makes charts","Like a GPS that picks the quickest route for your query."],
+["Spark in action","Spark can run your work on…","Many computers at the same time","Only one computer","Only a phone","Only paper","A cluster shares the work, so big jobs finish faster."],
+["Spark in action","Compared with MapReduce, Spark is usually…","Much faster","Much slower","The same","Unable to read files","Spark can be many times faster, especially with several steps."],
+["Hive + Spark","In Hive + Spark, what does Hive provide?","The catalogue (Metastore) of tables","The fast engine","The screen","The internet","Spark reads the Hive catalogue to know which tables exist and where they are."],
+["Hive + Spark","In Hive + Spark, what does Spark provide?","The fast engine that runs the query","The catalogue","The storage disks","The keyboard","Spark replaces the slow MapReduce engine."],
+["Hive + Spark","What is the big benefit of Hive + Spark for an analyst?","Write simple SQL and get fast results","Learn Java first","Wait hours for results","Buy a new laptop","You keep SQL and get Spark’s speed."],
+["Hive + Spark","Which line lets Spark use Hive tables?",".enableHiveSupport()",".enableMagic()",".startFire()",".openTables()","This setting connects your Spark session to the Hive Metastore."]
+];
+
+var $=function(id){return document.getElementById(id)};
+var set=[],i=0,score=0,locked=false,cur=null,res=[],stats={};
+function shuf(a){a=a.slice();for(var n=a.length-1;n>0;n--){var k=Math.floor(Math.random()*(n+1)),t=a[n];a[n]=a[k];a[k]=t}return a}
+function view(id){["start","quiz","end"].forEach(function(v){$(v).className=(v==="quiz"||v==="end"?"card ":"card ")+(v===id?"":"hide")});window.scrollTo(0,0)}
+function begin(list){set=list;i=0;score=0;res=[];stats={};$("dots").innerHTML=set.map(function(){return"<i></i>"}).join("");view("quiz");show()}
+function show(){
+  var d=set[i];locked=false;
+  cur=shuf([0,1,2,3]);
+  $("count").textContent="Question "+(i+1)+" of "+set.length;
+  $("tag").textContent=d[0];$("q").textContent=d[1];
+  var box=$("opts");box.innerHTML="";
+  cur.forEach(function(idx,k){
+    var b=document.createElement("button");b.type="button";b.className="opt";
+    b.innerHTML="<kbd>"+(k+1)+"</kbd><span></span>";b.lastChild.textContent=d[2+idx];
+    b.onclick=function(){pick(k)};box.appendChild(b);
+  });
+  var ds=$("dots").children;for(var n=0;n<ds.length;n++){if(n===i)ds[n].className="now"}
+  $("fb").className="fb hide";$("next").className="btn hide";
+}
+function pick(k){
+  if(locked)return;locked=true;
+  var d=set[i],right=cur[k]===0,bs=$("opts").children;
+  for(var n=0;n<bs.length;n++){bs[n].disabled=true;if(cur[n]===0)bs[n].classList.add("ok");else if(n===k)bs[n].classList.add("bad")}
+  if(right)score++;
+  var t=d[0];stats[t]=stats[t]||[0,0];stats[t][1]++;if(right)stats[t][0]++;
+  res.push({d:d,right:right});
+  $("dots").children[i].className=right?"ok":"bad";
+  $("fb").className="fb "+(right?"ok":"bad");
+  $("fb").innerHTML="<b>"+(right?"Correct!":"Not quite.")+"</b>"+d[6];
+  $("next").textContent=i===set.length-1?"See my results":"Next question";
+  $("next").className="btn";$("next").focus();
+}
+function finish(){
+  var pc=Math.round(score/set.length*100);
+  view("end");
+  $("arc").setAttribute("stroke-dasharray",(390*pc/100)+" 390");
+  $("pct").textContent=pc+"%";
+  $("msg").textContent=pc>=85?"Excellent work!":pc>=60?"Good job!":"Nice start!";
+  $("sum").textContent="You got "+score+" of "+set.length+" right.";
+  $("topics").innerHTML=Object.keys(stats).map(function(t){var s=stats[t];return'<div class="row"><div><span>'+t+'</span><span>'+s[0]+'/'+s[1]+'</span></div><div class="track"><i style="width:'+(s[0]/s[1]*100)+'%"></i></div></div>'}).join("");
+  var miss=res.filter(function(r){return!r.right});
+  $("review").innerHTML=miss.length?"<h2 style='font-size:1.1rem;margin:18px 0 4px'>To review</h2>"+miss.map(function(r){var m=document.createElement("div");m.className="miss";var q=document.createElement("div");q.textContent=r.d[1];var a=document.createElement("small");a.textContent="Answer: "+r.d[2];m.appendChild(q);m.appendChild(a);return m.outerHTML}).join(""):"";
+  $("retry").className=miss.length?"btn alt":"btn alt hide";
+}
+$("next").onclick=function(){i++;if(i>=set.length)finish();else show()};
+$("again").onclick=function(){view("start")};
+$("retry").onclick=function(){begin(shuf(res.filter(function(r){return!r.right}).map(function(r){return r.d})))};
+Array.prototype.forEach.call(document.querySelectorAll(".mode"),function(b){b.onclick=function(){var n=+b.getAttribute("data-n");begin(shuf(D).slice(0,n))}});
+$("theme").onclick=function(){var r=document.documentElement,dark=r.getAttribute("data-theme")==="dark"||(r.getAttribute("data-theme")!=="light"&&matchMedia("(prefers-color-scheme:dark)").matches);r.setAttribute("data-theme",dark?"light":"dark")};
+document.addEventListener("keydown",function(e){
+  if($("quiz").classList.contains("hide"))return;
+  if(!locked&&e.key>="1"&&e.key<="4"){pick(+e.key-1)}
+  else if(locked&&e.key==="Enter"&&document.activeElement!==$("next")){e.preventDefault();$("next").click()}
+});
+</script>
+</body>
+</html>
